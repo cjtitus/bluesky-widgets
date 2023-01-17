@@ -363,7 +363,11 @@ class SearchResults:
         return item_content
 
     def get_uid_by_row(self, row):
-        if row > len(self._catalog):
+        load_catalog = f"First instance of catalog {self._catalog}"
+        catalog_len = len(self._catalog)
+        if row > catalog_len:
+            print(self._catalog)
+            print(f"Failed if with row {row} and catalog_len {catalog_len}")
             raise ValueError(f"Cannot get row {row}. Catalog has {len(self._catalog)} rows.")
         cache_length = len(self._uids)
         if row >= cache_length:

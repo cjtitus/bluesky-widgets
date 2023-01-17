@@ -43,11 +43,16 @@ class AutoLines(AutoPlotter):
     def _on_figure_removed(self, event):
         super()._on_figure_removed(event)
         figure = event.item
+        key_to_remove = None
         for key, plot_builders in self._lines_instances.items():
+            print(f"Potential removal key {key}")
             for plot_builder in plot_builders:
                 if figure == plot_builder.figure:
                     key_to_remove = key
-        self._lines_instances.pop(key_to_remove)
+        if key_to_remove is None:
+            print("No figures matched!")
+        else:
+            self._lines_instances.pop(key_to_remove)
 
     def handle_new_stream(self, run, stream_name, **kwargs):
         """
@@ -179,6 +184,7 @@ class AutoLines(AutoPlotter):
         if ndims == 1:
             (x_key,) = dim_fields
             key = (stream_name, x_key, (tuple(columns),))
+            print(f"Adding new stream {key}")
             try:
                 lines_instances = self._lines_instances[key]
             except KeyError:
@@ -210,6 +216,7 @@ class AutoLines(AutoPlotter):
                 else:
                     short_title = title
                 figure = Figure(axes_list, title=title, short_title=short_title)
+                print(f"Adding {key} to self._lines_instances")
                 self._lines_instances[key] = lines_instances
                 self.plot_builders.extend(lines_instances)
                 self.figures.append(figure)
